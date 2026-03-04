@@ -1,22 +1,26 @@
-"""Tiny local-model inference + checker example for Tinfoil deployment."""
+"""Inference + checker example using Tinfoil's inference API."""
 
 import os
 from flask import Flask, jsonify, request
-from transformers import pipeline
+from tinfoil import TinfoilAI
 
 app = Flask(__name__)
 
-MODEL_NAME = os.environ.get("MODEL_NAME", "TinyLlama/TinyLlama-1.1B-Chat-v1.0")
+client = TinfoilAI(
+    api_key=os.getenv("TINFOIL_API_KEY")
+)
 
-print(f"Loading model: {MODEL_NAME}")
-generator = pipeline("text-generation", model=MODEL_NAME, device_map="auto")
-print("Model loaded.")
+MODEL_NAME = os.getenv("MODEL_NAME", "deepseek-r1-0528")
 
 
-def chat(messages, max_new_tokens=256):
-    """Run a chat-style completion using the local model."""
-    output = generator(messages, max_new_tokens=max_new_tokens, do_sample=True, temperature=0.7)
-    return output[0]["generated_text"][-1]["content"]
+def chat(messages, max_tokens=256):
+    """Run a chat-style completion using Tinfoil's inference API."""
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=messages,
+        max_tokens=max_tokens,
+    )
+    return response.choices[0].message.content
 
 
 @app.route("/health")
@@ -32,7 +36,7 @@ def generate():
     # Step 1: generate a response
     generated_text = chat(
         [{"role": "user", "content": prompt}],
-        max_new_tokens=256,
+        max_tokens=256,
     )
 
     # Step 2: checker reviews the response
@@ -48,7 +52,7 @@ def generate():
                 ),
             }
         ],
-        max_new_tokens=64,
+        max_tokens=64,
     )
 
     return jsonify(
