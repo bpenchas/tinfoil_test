@@ -5,7 +5,7 @@ memory: 16384
 
 containers:
   - name: "inference-checker"
-    image: "ghcr.io/bpenchas/tinfoil-test@sha256:8ac0422e668b3576423954439a836c6d22ce5a851817afb0459e7157b91b240d"
+    image: "ghcr.io/bpenchas/tinfoil-test@sha256:a3b776679f934e680e23c4e6d383664848928aa9c3f76de9ed76a6bcdb6c8cfc"
     env:
       - MODEL_NAME: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
 
