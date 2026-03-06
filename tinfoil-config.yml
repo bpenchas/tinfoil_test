@@ -5,7 +5,7 @@ memory: 16384
 
 containers:
   - name: "inference-checker"
-    image: "ghcr.io/bpenchas/tinfoil-test@sha256:0284c4d55ce2f687b051e27368f65d8bf51d410067cf0bd49dd2e8ca246f88c6"
+    image: "ghcr.io/bpenchas/tinfoil-test:latest"
     env:
       - MODEL_NAME: "deepseek-r1-0528"
     secrets:
